@@ -97,12 +97,12 @@
                     var date = new Date(data[u][t].time);
                     var time = date.toString();
                     if (data[u][t].img != "") {
-                        mytab = mytab + "<td><img src='" + users[u].profile_picture + "' width='50px'></td>";
+                        mytab = mytab + "<td><img src='" + users[u].profile_picture + class="avatar" "''></td>";
                         mytab = mytab + "<td>" + users[u].email + "</td>";
                         mytab = mytab + "<td>" + data[u][t].tweet + "</td>";
                         mytab = mytab + "<td>" + time + "<br><img src='" + data[u][t].img + "' width='300px'></td>";
                     } else {
-                        mytab = mytab + "<td><img src='" + users[u].profile_picture + "' width='50px'></td>";
+                        mytab = mytab + "<td><img src='" + users[u].profile_picture +  class="avatar" "' '></td>";
                         mytab = mytab + "<td>" + users[u].email + "</td>";
                         mytab = mytab + "<td>" + data[u][t].tweet + "</td>";
                         mytab = mytab + "<td>" + time + "</td>";
@@ -171,6 +171,15 @@
     
     </script>
 
+    <head>
+        <link href = "style.css" rel ="stylesheet"/>
+        <title>Geof</title>
+        
+    </head>
+    <banner>
+        <img id = "logo" src = "Geoff_logo.png"   height = 60px; position= relative;>
+        
+    </banner>
     <body>
         <button onclick="signin()">Sign in</button>
         <button onclick="signout()">Sign out</button>
