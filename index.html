@@ -34,7 +34,7 @@
                 mydiv = document.getElementById("mydata");
                 mydiv.innerHTML = name
                 myphotodiv = document.getElementById("myphoto");
-                myphotodiv.innerHTML = "<img src='" + imageUrl + "'/>";
+                myphotodiv.innerHTML = "<img src='" + imageUrl + "' width = 50px;/>";
 
                 firebase.database().ref('/tweets').once('value').then(function(snapshot) {
                     var data = (snapshot.val());
@@ -84,27 +84,60 @@
                 profile_picture : imageUrl
             });
         }
-        
+        function sleep(seconds) {
+            var currentTime = new Date().getTime();
+
+            while (currentTime + (seconds * 1000) >= new Date().getTime()) {
+            }
+        }  
         function updatetweets(data) {
             //var mylist = "<ul>";
             var mytab = "<table>";
+                    var loadDate = new Date().toString();        
+
             users = data[1]; // put on top, because changed data - not good coding change later
             data = data[0];
             
             for (var u in data) {
-                for (var t in data[u]) {
+                 for (var t in data[u]) {
                     mytab = mytab + "<tr>";
                     var date = new Date(data[u][t].time);
                     var time = date.toString();
-                    if (data[u][t].img != "") {
-                        mytab = mytab + "<td><img src='" + users[u].profile_picture + class="avatar" "''></td>";
-                        mytab = mytab + "<td>" + users[u].email + "</td>";
-                        mytab = mytab + "<td>" + data[u][t].tweet + "</td>";
-                        mytab = mytab + "<td>" + time + "<br><img src='" + data[u][t].img + "' width='300px'></td>";
+                    if (time.substring(0,15) == loadDate.substring(0,15)) {
+                        if (time.substring(16,18) == loadDate.substring(16,18)) {
+                            var num1 = Number(loadDate.substring(19,21));
+                            var num2 = Number(time.substring(19,21));
+                            console.log(num1);
+                            var num3 = num1 - num2;
+                            time = num3.toString() + " minutes ago";
+                        } else {
+                            var num1 = Number(loadDate.substring(16,18));
+                            var num2 = Number(time.substring(16,18));
+                            var num3 = num1 - num2;
+                            if (num3 == 1) {
+                                var num1 = Number(loadDate.substring(19,21));
+                                var num2 = Number(time.substring(19,21));
+                                console.log(num1);
+                                var num3 = num1 - num2 + 60;
+                                if (num3 > 59) {
+                                    time = "1 hour ago"
+                                } else {
+                                    time = num3.toString() + " minutes ago";
+                                }
+                            } else {
+                                time = num3.toString() + " hours ago";
+                            }
+                        }
                     } else {
-                        mytab = mytab + "<td><img src='" + users[u].profile_picture +  class="avatar" "' '></td>";
-                        mytab = mytab + "<td>" + users[u].email + "</td>";
-                        mytab = mytab + "<td>" + data[u][t].tweet + "</td>";
+                        time = time.substring(4,15);
+                    }
+                    if (data[u][t].img != "") {
+                        mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
+                        mytab = mytab + "<td><img class = 'zoom' src='" + data[u][t].img + "' width=100%'></td>";
+                        mytab = mytab + "<td>"+ time + "</td>";
+                    } else {
+                        mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
+                        mytab = mytab + "<td class = 'txtbox width=100%'>" + data[u][t].tweet + "</td>";
                         mytab = mytab + "<td>" + time + "</td>";
                         
                         
@@ -166,42 +199,340 @@
             firebase.auth().signOut().then(function() {
             });
         }
-        
+ 
 
     
     </script>
 
     <head>
-        <link href = "style.css" rel ="stylesheet"/>
         <title>Geof</title>
+        <link rel = "shortcut icon" type = "image/png" href = "Geoff_logo.png">
         
     </head>
     <banner>
-        <img id = "logo" src = "Geoff_logo.png"   height = 60px; position= relative;>
-        <img src = "G3off_Text_Logo.png" height = 60px;>
+        <img id = "logo" src = "Geoff_logo1.png"   height = 60px; >
+        <img src = "G3off_Text_Logo3.png" padding = 0px; margin = 0px; height = 60px;>
+
+       <!-- Trigger/Open The Modal -->
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+banner{
+    height: 90px;
+    background:white;
+    width:100%;
+    top:0px;
+    color:white;
+    font-size: 150%;
+    left:0px;
+    position: relative;
+
+    
+    
+
+}
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  color : black;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.profile{
+background-color: 	#FFA07A;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  width:80px;
+  height: 55px;
+  left:60%;
+  top:-25px;
+    text-align: center;
+    
+}
+
+.profile:hover{
+    filter:brightness(0.5);
+}
+    html{
+    background-color:F2F2F2;
+    margin:0;
+    padding:0;
+    height:1000px;
+}
+    .button1{border-radius: 12px;}
+
+banner{
+    height: 90px;
+    background:white;
+    width:100%;
+    z-index: 10;
+    position: fixed;
+    top:0px;
+    color:white;
+    font-size: 150%;
+    left:0px;
+    
+    
+
+}
+#logo{
+    margin-top:14px;
+    
+}
+body{
+    top:100px;
+    position:relative;
+}
+    td{
+        padding:0px;
+    }
+
+.avatar {
+  vertical-align: middle;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 0px;
+    
+}
+
+.avatar:hover {
+    filter: brightness(0.5);
+}
+.zoom {
+  transition: transform .25s; /* Animation */
+  background-color: white;
+}
+    
+.zoom:hover {
+  transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+.txtbox {
+    padding: 5px;
+    background-color:white;
+    align-content: center;
+    
+}
+
+.close1 {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close1:hover,
+.close1:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.game{
+background-color: 	#FFA07A;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  width:80px;
+  height: 55px;
+  left:60%;
+  top:-25px;
+    text-align: center;
+    
+}
+
+.game:hover{
+    filter:brightness(0.5);
+}
+    html{
+    background-color:F2F2F2;
+    margin:0;
+    padding:0;
+}
+
+</style>
+    
+<button id="myBtn1" class = "game button1">Topics</button>
+<div id="myModal1" class="modal">
+
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span1 class="close1">&times;</span1>
+     <center>
+        <a href="overwatch.html"><h2>Overwatch</h2></a>
+
+         <a href="csgo.html"><h2>CSGO</h2></a>
+         
+        <a href="league.html"><h2>League of Legends</h2></a>
+         <a href="DDLC.html"><h2>Doki Doki Literature Club</h2></a>
         
-    </banner>
-    <body>
-        <button onclick="signin()">Sign in</button>
+      </center>
+           
+
+</div>
+
+</div>
+
+
+<script>
+// Get the modal
+var modal1 = document.getElementById('myModal1');
+
+// Get the button that opens the modal
+var btn1 = document.getElementById("myBtn1");
+
+// Get the <span> element that closes the modal
+var span1 = document.getElementsByClassName("close1")[0];
+
+// When the user clicks the button, open the modal 
+btn1.onclick = function() {
+  modal1.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span1.onclick = function() {
+  modal1.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal1) {
+    modal1.style.display = "none";
+  }
+}
+</script>
+        
+<profile>
+
+
+<!-- Trigger/Open The Modal -->
+<button id="myBtn" class = "profile button1">Profile</button>
+
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+              <div id="myphoto"></div>
+
+                <div id="mydata"></div>
+
+              <button onclick="signin()">Sign in</button>
         <button onclick="signout()">Sign out</button>
 
+</div>
+
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+        </profile>
+    </banner>
+    
+    <body>
+
+        
+
         <form>
-            Tweet:<br>
+            <h3>Geof:</h3>
             <textarea id="twit" type="text" name="thetweet" cols="100" rows="4"></textarea>
         </form> 
-        <button type="button" onclick="tweet()">Submit</button>
+        <button type="button" onclick="tweet()">Post</button>
     
         <br><input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" />
         <div id="imgTest" style="display:none;"></div>
         
     <div id="mytweets"></div>
-    <div id="mydata"></div>
-    <div id="myphoto"></div>
         
         
         
         
     </body>
+<style>
+    body{
+        margin-left:30px;
+        font-family:Verdana;
+    }   
+    .txtbox{
+        width:50%;
+        
+        
+    }
+    .button{
+        
+    }
+    
+
+</style>
 
     
 
