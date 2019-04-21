@@ -93,7 +93,9 @@
         function updatetweets(data) {
             //var mylist = "<ul>";
             var mytab = "<table>";
-                    var loadDate = new Date().toString();        
+                    var loadDate = new Date().toString();   
+                    var newVidFile = "";
+
 
             users = data[1]; // put on top, because changed data - not good coding change later
             data = data[0];
@@ -131,17 +133,22 @@
                     } else {
                         time = time.substring(4,15);
                     }
-                    if (data[u][t].img != "") {
+                    if (data[u][t].img != null && data[u][t].img != "") {
                         mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
-                        mytab = mytab + "<td><img class = 'zoom' src='" + data[u][t].img + "' width=100%'></td>";
+                        mytab = mytab + "<td><img class = 'zoom' src='" + data[u][t].img + "' width=100%' 'border-radius: 12px'></td>";
                         mytab = mytab + "<td>"+ time + "</td>";
-                    } else {
+                    } else if (data[u][t].vid != null && data[u][t].vid != ""){
                         mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
-                        mytab = mytab + "<td class = 'txtbox width=100%'>" + data[u][t].tweet + "</td>";
+                        /*mytab = mytab + "<td class = 'txtbox width=100%'>" + data[u][t].tweet + "</td>";*/
+                        mytab = mytab + "<td class = 'txtbox width = 100%'> <iframe width=' 'src='" + data[u][t].vid + "'frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br>" + data[u][t].tweet + "</td>";
                         mytab = mytab + "<td>" + time + "</td>";
                         
                         
-                    } 
+                    } else{
+                         mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
+                        mytab = mytab + "<td class = 'txtbox width=100%'>" + data[u][t].tweet + "</td>";
+                        mytab = mytab + "<td>" + time + "</td>";
+                    }
                     mytab = mytab + "</tr>";
                 }   
             }
@@ -154,13 +161,23 @@
         
         // write tweets to firebase
         function tweet() {
-            
+            loadDate = new Date().toString();
             var twitdoc = document.getElementById("twit");
             var twitimg = document.getElementById("imgTest");
+            var twitvid = document.getElementById("vidFileID");
+
             var nameValue = twitdoc.value;
             var imgValue = twitimg.innerHTML;
-            var js_time = Date.now();
-            var tweetid = firebase.database().ref('tweets/' + userId + "/").push({tweet: nameValue, time: js_time, img: imgValue});
+            var vidValue = twitvid.value;
+
+            var js_time = Date.now()
+            ;
+            
+            
+            if (nameValue.length == 0 && imgValue == "" && vidValue == "") {
+                alert("You must post at least one of the following: text, image, video");
+            }else{
+            var tweetid = firebase.database().ref('tweets/' + userId + "/").push({tweet: nameValue, time: js_time, img: imgValue, vid:vidValue});
             twitdoc.value = "";
             console.log("tweet written")
             
@@ -179,6 +196,7 @@
                       });
                     }
                 });
+            }
             
             
             
@@ -317,11 +335,12 @@ banner{
     
 }
 body{
+    
     top:100px;
     position:relative;
 }
     td{
-        padding:0px;
+        height:75px;
     }
 
 .avatar {
@@ -330,7 +349,7 @@ body{
   height: 60px;
   border-radius: 50%;
   padding: 0px;
-    
+
 }
 
 .avatar:hover {
@@ -349,8 +368,10 @@ body{
     padding: 5px;
     background-color:white;
     align-content: center;
+    border-radius: 12px;
     
 }
+
 
 .close1 {
   color: #aaaaaa;
@@ -501,16 +522,27 @@ window.onclick = function(event) {
     <body>
 
         
-
+     <h4>Create a Geoffery</h4>
         <form>
-            <h3>Geof:</h3>
+       
             <textarea id="twit" type="text" name="thetweet" cols="100" rows="4"></textarea>
-        </form> 
-        <button type="button" onclick="tweet()">Post</button>
-    
-        <br><input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" />
+       
+        <br>
+       
+         <br>Image:
+        <input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" />
         <div id="imgTest" style="display:none;"></div>
         
+       Video:
+        <input id="vidFileID" type="text"/>
+        <div id="vidTest" style="display:none;"></div>
+        <br>   <br>
+             <button id="post" type="button" onclick="tweet()">Share</button>
+ 
+         </form>
+    
+    <h2>Explore</h2>
+
     <div id="mytweets"></div>
         
         
@@ -524,12 +556,59 @@ window.onclick = function(event) {
     }   
     .txtbox{
         width:50%;
+
+    
+    }
+    form{
+        background-color: white;
+        width:625px;
+        padding:10px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        /*z-index: -1;
+        position: relative;*/
         
+
         
     }
-    .button{
-        
+    form{
+        margin-top:-5px;
+        padding-top:15px;
+        margin-bottom:60px;
     }
+    h4{
+        font-weight: 500;
+        font-size:20;
+        background-color: #FFA07A;
+        color:white;
+        padding:15px;
+        margin:0px;
+                width:615px;
+        z-index: 1;
+        position: relative;
+         border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+
+    }
+    #mytweets{
+        margin-top:50px;
+        margin-left:10px;
+    }
+    #post{
+         background-color: #FFA07A;
+          border: none;
+          color: white;
+          height:50px;
+          width:150px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 25px;
+        border-radius: 12px;
+    }
+    #post:hover{
+    filter:brightness(0.5);
+}
     
 
 </style>
