@@ -133,9 +133,11 @@
                     } else {
                         time = time.substring(4,15);
                     }
+                if(data[u][t].local == "csgo"){
+
                     if (data[u][t].img != null && data[u][t].img != "") {
                         mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
-                        mytab = mytab + "<td><img class = 'zoom' src='" + data[u][t].img + "' width=100%' ></td>";
+                        mytab = mytab + "<td><img class = 'zoom' src='" + data[u][t].img + "' width=100%' 'border-radius: 12px'></td>";
                         mytab = mytab + "<td>"+ time + "</td>";
                     } else if (data[u][t].vid != null && data[u][t].vid != ""){
                         mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
@@ -149,9 +151,11 @@
                         mytab = mytab + "<td class = 'txtbox width=100%'>" + data[u][t].tweet + "</td>";
                         mytab = mytab + "<td>" + time + "</td>";
                     }
+                }
                     mytab = mytab + "</tr>";
                 }   
             }
+            
             //mylist = mylist + "</ul>";
             mytab = mytab + "</table>"
             var mytdiv = document.getElementById("mytweets");
@@ -170,17 +174,18 @@
             var imgValue = twitimg.innerHTML;
             var vidValue = twitvid.value;
 
-            var js_time = Date.now();
+            var js_time = Date.now()
+            ;
             
             
             if (nameValue.length == 0 && imgValue == "" && vidValue == "") {
                 alert("You must post at least one of the following: text, image, video");
             }else{
-            var tweetid = firebase.database().ref('tweets/' + userId + "/").push({tweet: nameValue, time: js_time, img: imgValue, vid:vidValue});
+            var tweetid = firebase.database().ref('tweets/' + userId + "/").push({tweet: nameValue, time: js_time, img: imgValue, vid:vidValue, local: "csgo"});
             twitdoc.value = "";
             console.log("tweet written")
             
-            } firebase.database().ref('/tweets').once('value').then(function(snapshot) {
+            firebase.database().ref('/tweets').once('value').then(function(snapshot) {
                     var data = (snapshot.val());
                     if (data == null) {
                       console.log("No data found at /tweets/" + userId);  
@@ -195,7 +200,7 @@
                       });
                     }
                 });
-            
+            }
             
             
             
@@ -222,7 +227,7 @@
     </script>
 
     <head>
-        <title>Geof</title>
+        <title>CSGO</title>
         <link rel = "shortcut icon" type = "image/png" href = "Geoff_logo.png">
         
     </head>
@@ -365,7 +370,6 @@ body{
 .zoom {
   transition: transform .25s; /* Animation */
   background-color: white;
-    border-radius: 15px
 }
     
 .zoom:hover {
@@ -376,7 +380,7 @@ body{
     padding: 5px;
     background-color:white;
     align-content: center;
-    border-radius: 15px;
+    border-radius: 12px;
     font-size:20;
 }
 
@@ -434,22 +438,20 @@ background-color: 	#FFA07A;
   <div class="modal-content1">
     <span1 class="close1">&times;</span1>
      <center>
-        <a class = "topicname" href="overwatch.html"><h2>Overwatch</h2></a>
-         <img src = "overwatch.png" height=70px;>
+        <a class = "topicname" href="index.html"><h2>Explore</h2></a>
+          <img src = "home.png" height=70px;>
 
-         <a class = "topicname" href="csgo.html"><h2>CSGO</h2></a>
-                  <img src = "csgo.png" height=70px;>
+         <a class = "topicname" href="overwatch.html"><h2>Overwatch</h2></a>
+                  <img src = "overwatch.png" height=100px;>
 
-         
-        <a class = "topicname" href="league.html"><h2>League of Legends</h2></a>
+         <a class = "topicname" href="league.html"><h2>League</h2></a>
                   <img src = "league.png" height=70px;>
 
-         <a class = "topicname" href="DDLC.html"><h2>Doki Doki Literature Club</h2></a>
-                  <img src = "ddlc.png" height=70px;>
+       
+         <a class = "topicname" href="DDLC.html"><h2>Doki Doki Literature Club</h2></a>         <img src = "ddlc.png" height=70px;>
 
         
       </center>
-      
            
 
 </div>
@@ -562,7 +564,7 @@ window.onclick = function(event) {
  
          </form>
     
-    <h2 id="title">Explore</h2>
+    <h2 id="title">CSGO</h2>
 
     <div id="mytweets"></div>
         
@@ -631,11 +633,10 @@ window.onclick = function(event) {
     #post:hover{
     filter:brightness(0.5);
 }
-    #title{
+     #title{
         font-size:30;
         font-style:italic;
     }
-    
 
 </style>
 
