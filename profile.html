@@ -134,6 +134,8 @@
                     } else {
                         time = time.substring(4,15);
                     }
+                if(data[u][t].local == "following"){
+
                     if (data[u][t].img != null && data[u][t].img != "") {
                         mytab = mytab + "<td><img onclick='openModal1()'class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
                         mytab = mytab + "<td><img class = 'zoom' src='" + data[u][t].img + "' width=100%' ></td>";
@@ -152,6 +154,7 @@
                     }
                     mytab = mytab + "</tr>";
                 }   
+            }
             }
             //mylist = mylist + "</ul>";
             mytab = mytab + "</table>"
@@ -177,7 +180,7 @@
             if (nameValue.length == 0 && imgValue == "" && vidValue == "") {
                 alert("You must post at least one of the following: text, image, video");
             }else{
-            var tweetid = firebase.database().ref('tweets/' + userId + "/").push({tweet: nameValue, time: js_time, img: imgValue, vid:vidValue});
+            var tweetid = firebase.database().ref('tweets/' + userId + "/").push({tweet: nameValue, time: js_time, img: imgValue, vid:vidValue, local: "following"});
             twitdoc.value = "";
             console.log("tweet written")
             
@@ -664,13 +667,15 @@ window.onclick = function(event) {
 
   <!-- Modal content -->
   <div class="modal-content4">
-          <span4 class= "close4">&times;</span4>      
+          <span4 class= "close4">&times;</span4>
+      <h3 id = "bruhbruhprofile">bruh</h3>
+      
+    <script>
           
           
-        <center><h3 id="bruhbruhname">David Zhou</h3>
-            <p id="bruhbruhbio" class = 'bruh'>david.zhou@ucc.on.ca</p></center>     
+            document.getElementById("bruhbruhprofile").innerHTML = "<center><h3>David</h3>" + "<p class = 'bruh'>david.zhou@ucc.on.ca</p>" + "<p class = 'bruh'>Bio: This is a bruh moment</p></center>"     
                    
-
+      </script>
 
 
 </div>
@@ -717,25 +722,12 @@ window.onclick = function(event) {
   <div class="modal-content2">
           <span2 class= "close2">&times;</span2>
       <h3 id="bruhprofile">profile</h3>
-      <center><button id = "bruhbutton" onclick = "alertfollowing()">Follow</button></center>
+      <center><a id = "post" href = "follow.html">Follow</a></center>
       <script>
           
-          var bruhbutton = document.getElementById("bruhbutton")
-            document.getElementById("bruhprofile").innerHTML = "<center><h3>Liam Curry</h3>" + "<p class = 'bruh'>liam.curry@ucc.on.ca</p>" + "<p class = 'bruh'>Bio: My name is jeff</p></center>" 
-          var follow = false;
-            function alertfollowing(){
-                if(follow == false){
-
-                alert("Followed Liam Curry");
-                bruhbutton.innerHTML = "Followed";
-                follow = true;
-            }else{
-                alert("Unfollowed");
-                bruhbutton.innerHTML = "Follow";
-                
-            }
-                
-            }        
+          
+            document.getElementById("bruhprofile").innerHTML = "<center><h3>Liam Curry</h3>" + "<p class = 'bruh'>liam.curry@ucc.on.ca</p>" + "<p class = 'bruh'>Bio: My name is jeff</p></center>"     
+                   
       </script>
 
 <style>
@@ -744,7 +736,9 @@ window.onclick = function(event) {
         font-weight:100;
         
     }
- 
+    a{
+        padding-top:10px;
+    }
       </style>
 
 
@@ -817,8 +811,13 @@ window.onclick = function(event) {
 
 
 <!-- Trigger/Open The Modal -->
-<button id="myBtn" class = "profile button1">Profile</button>
-
+<a id = "bruhmoment" class = "profile button1" href = "index.html">Home</a>
+<style>
+    #bruhmoment{
+        padding:18px;
+    }
+    
+</style>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
@@ -832,30 +831,20 @@ window.onclick = function(event) {
                 <div id="mydata"></div>
                 <div id="myemail"></div>
       <div id = "mybio"></div>
-      <br>
-  <a class="followbruh" href = "profile.html"> Check Following</a>
-      
+  
       <br><br>
    <h4>Say Something:</h4>
 
       <form>
 
-      <textarea id="bioinput" type="text" name="thetweet" cols="100" rows="2"></textarea>
+      <textarea id="bioinput" type="text" name="thetweet" cols="100" rows="4"></textarea>
         <button style="font-family: 'Roboto';"  id="biochange" type="button" onclick="updatebio()">Confirm Change</button>
-    </form>
-        <h4>Change your Gamer Tag:</h4>
-
-      <form>
-
-      <textarea id="gamertag" type="text" name="thetweet" cols="100" rows="2"></textarea>
-        <button style="font-family: 'Roboto';"  id="biochange" type="button" onclick="updatename()">Confirm Change</button>
     </form>
             <button onclick="signin()">Sign in</button>
         <button onclick="signout()">Sign out</button>
 </div>
             
 <script>
-    
   function updatebio() {
             var bio = document.getElementById("bioinput").value;
              firebase.database().ref('users/' + userId).set({
@@ -867,43 +856,10 @@ window.onclick = function(event) {
             
                myemaildiv = document.getElementById("myemail");
                 myemaildiv.innerHTML = email + " " + "<br>" + "<br>" + bio;
-                bio69 = document.getElementById("bruhbruhbio");
-                bio69.innerHTML = email + " " + "<br>" + "<br>" + bio;
-      
          
         }
-    function updatename(){
-             var username = document.getElementById("gamertag").value;
-             firebase.database().ref('users/' + userId).set({
-                        username: username,
-                        email: email,
-                        profile_picture : imageUrl,
-                    });
-            
-               name2 = document.getElementById("mydata");
-                name2.innerHTML = username;
-            name3 = document.getElementById("bruhbruhname")
-        name3.innerHTML = username;
-    }
-
 </script>
-<style>
-       .followbruh{
-         background-color: #FFA07A;
-          border: none;
-          color: white;
-          height:50px;
-          width:150px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 20px;
-        border-radius: 12px;
-    }
-    .followbruh:hover{
-    filter:brightness(0.5);
-}
-    </style>
+
 
 </div>
 
@@ -943,7 +899,7 @@ window.onclick = function(event) {
     <body>
   
     
-    <h2 id="title">Explore</h2>
+    <h2 id="title">Following</h2>
 
     <div id="mytweets"></div>
         
@@ -1018,21 +974,6 @@ window.onclick = function(event) {
         border-radius: 12px;
     }
     #post:hover{
-    filter:brightness(0.5);
-}
-       #bruhbutton{
-         background-color: #FFA07A;
-          border: none;
-          color: white;
-          height:50px;
-          width:150px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 25px;
-        border-radius: 12px;
-    }
-    #bruhbutton:hover{
     filter:brightness(0.5);
 }
     #title{

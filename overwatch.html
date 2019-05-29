@@ -1,5 +1,4 @@
 
-
 <html>
     
 <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -32,9 +31,11 @@
                 
                 // write data to document
                 mydiv = document.getElementById("mydata");
-                mydiv.innerHTML = name
+                mydiv.innerHTML = name;
                 myphotodiv = document.getElementById("myphoto");
                 myphotodiv.innerHTML = "<img src='" + imageUrl + "' width = 50px;/>";
+                myemaildiv = document.getElementById("myemail");
+                myemaildiv.innerHTML = email;
 
                 firebase.database().ref('/tweets').once('value').then(function(snapshot) {
                     var data = (snapshot.val());
@@ -133,29 +134,27 @@
                     } else {
                         time = time.substring(4,15);
                     }
-                if(data[u][t].local == "overwatch"){
-
+                    if(data[u][t].local == "overwatch"){
                     if (data[u][t].img != null && data[u][t].img != "") {
-                        mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
-                        mytab = mytab + "<td><img class = 'zoom' src='" + data[u][t].img + "' width=100%' 'border-radius: 12px'></td>";
+                        mytab = mytab + "<td><img onclick='openModal1()'class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
+                        mytab = mytab + "<td><img class = 'zoom' src='" + data[u][t].img + "' width=100%' ></td>";
                         mytab = mytab + "<td>"+ time + "</td>";
                     } else if (data[u][t].vid != null && data[u][t].vid != ""){
-                        mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
+                        mytab = mytab + "<td><img onclick='openModal()'class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
                         /*mytab = mytab + "<td class = 'txtbox width=100%'>" + data[u][t].tweet + "</td>";*/
-                        mytab = mytab + "<td class = 'txtbox width = 100%'> <iframe width=' 'src='" + data[u][t].vid + "'frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br>" + data[u][t].tweet + "</td>";
+                        mytab = mytab + "<td class = 'txtbox'> <iframe  src='" + data[u][t].vid + " 'width = '100%' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br>" + data[u][t].tweet + "</td>";
                         mytab = mytab + "<td>" + time + "</td>";
                         
                         
                     } else{
-                         mytab = mytab + "<td><img class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
+                         mytab = mytab + "<td><img onclick='openModal()' class = 'avatar' src='" + users[u].profile_picture + "' width='100px'></td>";
                         mytab = mytab + "<td class = 'txtbox width=100%'>" + data[u][t].tweet + "</td>";
                         mytab = mytab + "<td>" + time + "</td>";
                     }
-                }
                     mytab = mytab + "</tr>";
                 }   
             }
-            
+            }
             //mylist = mylist + "</ul>";
             mytab = mytab + "</table>"
             var mytdiv = document.getElementById("mytweets");
@@ -174,18 +173,17 @@
             var imgValue = twitimg.innerHTML;
             var vidValue = twitvid.value;
 
-            var js_time = Date.now()
-            ;
+            var js_time = Date.now();
             
             
             if (nameValue.length == 0 && imgValue == "" && vidValue == "") {
                 alert("You must post at least one of the following: text, image, video");
             }else{
-            var tweetid = firebase.database().ref('tweets/' + userId + "/").push({tweet: nameValue, time: js_time, img: imgValue, vid:vidValue, local: "overwatch"});
+            var tweetid = firebase.database().ref('tweets/' + userId + "/").push({tweet: nameValue, time: js_time, img: imgValue, vid:vidValue, local:"overwatch"});
             twitdoc.value = "";
             console.log("tweet written")
             
-            firebase.database().ref('/tweets').once('value').then(function(snapshot) {
+            } firebase.database().ref('/tweets').once('value').then(function(snapshot) {
                     var data = (snapshot.val());
                     if (data == null) {
                       console.log("No data found at /tweets/" + userId);  
@@ -200,7 +198,7 @@
                       });
                     }
                 });
-            }
+            
             
             
             
@@ -223,11 +221,13 @@
         }
  
 
-    
+   
+
+
     </script>
 
     <head>
-        <title>Overwatch</title>
+        <title>Geof</title>
         <link rel = "shortcut icon" type = "image/png" href = "Geoff_logo.png">
         
     </head>
@@ -252,8 +252,57 @@ body {font-family: Arial, Helvetica, sans-serif;}
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    font-size:30;
 }
-
+    .modal #myemail{
+        font-size: 15;
+        margin-top:10px;
+    }
+    .modal #myphoto{
+        width:400px;
+    }
+.modal2 {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    font-size:30;
+}
+    .modal3 {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    font-size:30;
+}
+        .modal4 {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    font-size:30;
+}
 banner{
     height: 90px;
     background:white;
@@ -270,7 +319,7 @@ banner{
 }
 /* Modal Content */
 .modal-content {
-  background-color: #fefefe;
+  background-color: #F2F2F2;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
@@ -283,6 +332,33 @@ banner{
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
+  color : black;
+
+}
+.modal-content2 {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  color : black;
+
+}
+    .modal-content3 {
+  background-color: #f3f3f3;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  color : black;
+
+}
+        .modal-content4 {
+  background-color: #f3f3f3;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
   color : black;
 
 }
@@ -370,6 +446,7 @@ body{
 .zoom {
   transition: transform .25s; /* Animation */
   background-color: white;
+    border-radius: 15px
 }
     
 .zoom:hover {
@@ -380,7 +457,7 @@ body{
     padding: 5px;
     background-color:white;
     align-content: center;
-    border-radius: 12px;
+    border-radius: 15px;
     font-size:20;
 }
 
@@ -394,6 +471,32 @@ body{
 
 .close1:hover,
 .close1:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+    .close3 {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close3:hover,
+.close3:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+        .close4 {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close4:hover,
+.close4:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;
@@ -428,8 +531,106 @@ background-color: 	#FFA07A;
         color:#FFA07A;
         font-size:20;
     }
+.close2 {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close2:hover,
+.close2:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+    #myBtn3{
+background-color: 	#FFA07A;
+  border: none;
+  color: white;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  width:80px;
+  height: 55px;
+  left:60%;
+  top:-25px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+#myBtn3:hover{
+    filter:brightness(0.5);
+}
 </style>
     
+
+<!-- Trigger/Open The Modal -->
+<button id="myBtn3">Post</button>
+
+
+<!-- The Modal -->
+<div id="myModal3" class="modal3">
+
+
+  <!-- Modal content -->
+  <div class="modal-content3">
+    <span class="close3">&times;</span>
+      <center>
+    <h4>Create a Geoffery</h4>
+        <form>
+       
+            <textarea id="twit" type="text" name="thetweet" cols="100" rows="4"></textarea>
+       
+        <br>
+       
+         <br>Image:
+        <input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" />
+        <div id="imgTest" style="display:none;"></div>
+        
+       Video:
+        <input id="vidFileID" type="text"/>
+        <div id="vidTest" style="display:none;"></div>
+        <br>   <br>
+             <button id="post" type="button" onclick="tweet()">Share</button>
+ 
+         </form>
+          </center>
+        
+</div>
+            
+</div>
+
+    
+<script>
+// Get the modal
+var modal3 = document.getElementById('myModal3');
+
+// Get the button that opens the modal
+var btn3 = document.getElementById("myBtn3");
+
+// Get the <span> element that closes the modal
+var span3 = document.getElementsByClassName("close3")[0];
+
+// When the user clicks the button, open the modal 
+btn3.onclick = function() {
+  modal3.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span3.onclick = function() {
+  modal3.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal3) {
+    modal3.style.display = "none";
+  }
+}
+</script>
+        
 <button id="myBtn1" class = "game button1">Topics</button>
 <div id="myModal1" class="modal">
 
@@ -444,25 +645,155 @@ background-color: 	#FFA07A;
          <a class = "topicname" href="csgo.html"><h2>CSGO</h2></a>
                   <img src = "csgo.png" height=70px;>
 
-        <a class = "topicname" href="league.html"><h2>League of Legends</h2></a>         <img src = "league.png" height=70px;>
+         
+        <a class = "topicname" href="league.html"><h2>League of Legends</h2></a>
+                  <img src = "league.png" height=70px;>
 
-         <a class = "topicname" href="ddlc.html"><h2>Doki Doki Literature Club</h2></a>         <img src = "ddlc.png" height=70px;>
+         <a class = "topicname" href="ddlc.html"><h2>Doki Doki Literature Club</h2></a>
+                  <img src = "ddlc.png" height=70px;>
 
         
       </center>
+      
            
 
 </div>
 
 </div>
+        
+<div id="myModal4" class="modal">
 
+
+  <!-- Modal content -->
+  <div class="modal-content4">
+          <span4 class= "close4">&times;</span4>      
+          
+          
+        <center><h3 id="bruhbruhname">David</h3>
+            <p class = 'bruh'>david.zhou@ucc.on.ca</p>
+            <p class = 'bruh'>Bio: This is a bruh moment</p></center>     
+                   
+
+
+
+</div>
+
+</div>
+
+
+        <script>
+                                                         
+                        
+ function openModal1(){
+             modal4.style.display = "block";
+
+    }
+// Get the modal
+var modal4 = document.getElementById('myModal4');
+    
+
+// Get the button that opens the modal
+
+// Get the <span> element that closes the modal
+var span4 = document.getElementsByClassName("close4")[0];
+
+// When the user clicks the button, open the modal 
+
+
+// When the user clicks on <span> (x), close the modal
+span4.onclick = function() {
+  modal4.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal4) {
+    modal4.style.display = "none";
+  }
+}
+</script>
+
+<div id="myModal2" class="modal">
+
+
+  <!-- Modal content -->
+  <div class="modal-content2">
+          <span2 class= "close2">&times;</span2>
+      <h3 id="bruhprofile">profile</h3>
+      <center><button id = "bruhbutton" onclick = "alertfollowing()">Follow</button></center>
+      <script>
+          
+          var bruhbutton = document.getElementById("bruhbutton")
+            document.getElementById("bruhprofile").innerHTML = "<center><h3>Liam Curry</h3>" + "<p class = 'bruh'>liam.curry@ucc.on.ca</p>" + "<p class = 'bruh'>Bio: My name is jeff</p></center>" 
+          var follow = false;
+            function alertfollowing(){
+                if(follow == false){
+
+                alert("Followed Liam Curry");
+                bruhbutton.innerHTML = "Followed";
+                follow = true;
+            }else{
+                alert("Unfollowed");
+                bruhbutton.innerHTML = "Follow";
+                
+            }
+                
+            }        
+      </script>
+
+<style>
+    .bruh{
+        font-size:20;
+        font-weight:100;
+        
+    }
+ 
+      </style>
+
+
+</div>
+
+</div>
+
+
+        <script>
+                                                         
+                        
+ function openModal(){
+             modal2.style.display = "block";
+
+    }
+// Get the modal
+var modal2 = document.getElementById('myModal2');
+    
+
+// Get the button that opens the modal
+
+// Get the <span> element that closes the modal
+var span2 = document.getElementsByClassName("close2")[0];
+
+// When the user clicks the button, open the modal 
+
+
+// When the user clicks on <span> (x), close the modal
+span2.onclick = function() {
+  modal2.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal2) {
+    modal2.style.display = "none";
+  }
+}
+</script>
 
 <script>
 // Get the modal
 var modal1 = document.getElementById('myModal1');
 
 // Get the button that opens the modal
-var btn1 = document.getElementById("myBtn1");
+var btn1= document.getElementById("myBtn1");
 
 // Get the <span> element that closes the modal
 var span1 = document.getElementsByClassName("close1")[0];
@@ -499,17 +830,84 @@ window.onclick = function(event) {
   <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
-              <div id="myphoto"></div>
+              <div id="myphoto" class = "avatar"></div>
 
                 <div id="mydata"></div>
+                <div id="myemail"></div>
+      <div id = "mybio"></div>
+      <br>
+  <a class="followbruh" href = "profile.html"> Check Following</a>
+      
+      <br><br>
+   <h4>Say Something:</h4>
 
-              <button onclick="signin()">Sign in</button>
+      <form>
+
+      <textarea id="bioinput" type="text" name="thetweet" cols="100" rows="2"></textarea>
+        <button style="font-family: 'Roboto';"  id="biochange" type="button" onclick="updatebio()">Confirm Change</button>
+    </form>
+        <h4>Change your Gamer Tag:</h4>
+
+      <form>
+
+      <textarea id="gamertag" type="text" name="thetweet" cols="100" rows="2"></textarea>
+        <button style="font-family: 'Roboto';"  id="biochange" type="button" onclick="updatename()">Confirm Change</button>
+    </form>
+            <button onclick="signin()">Sign in</button>
         <button onclick="signout()">Sign out</button>
+</div>
+            
+<script>
+    
+  function updatebio() {
+            var bio = document.getElementById("bioinput").value;
+             firebase.database().ref('users/' + userId).set({
+                        username: name,
+                        email: email,
+                        profile_picture : imageUrl,
+                        bio: bio
+                    });
+            
+               myemaildiv = document.getElementById("myemail");
+                myemaildiv.innerHTML = email + " " + "<br>" + "<br>" + bio;
+         
+        }
+    function updatename(){
+             var username = document.getElementById("gamertag").value;
+             firebase.database().ref('users/' + userId).set({
+                        username: username,
+                        email: email,
+                        profile_picture : imageUrl,
+                    });
+            
+               name2 = document.getElementById("mydata");
+                name2.innerHTML = username;
+            name3 = document.getElementById("bruhbruhname")
+        name3.innerHTML = username;
+    }
+
+</script>
+<style>
+       .followbruh{
+         background-color: #FFA07A;
+          border: none;
+          color: white;
+          height:50px;
+          width:150px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 20px;
+        border-radius: 12px;
+    }
+    .followbruh:hover{
+    filter:brightness(0.5);
+}
+    </style>
 
 </div>
 
-</div>
-
+    
 <script>
 // Get the modal
 var modal = document.getElementById('myModal');
@@ -537,35 +935,17 @@ window.onclick = function(event) {
   }
 }
 </script>
+    
+
         </profile>
     </banner>
     
     <body>
-
-        
-     <h4>Create a Geoffery</h4>
-        <form>
-       
-            <textarea id="twit" type="text" name="thetweet" cols="100" rows="4"></textarea>
-       
-        <br>
-       
-         <br>Image:
-        <input id="inputFileToLoad" type="file" onchange="encodeImageFileAsURL();" />
-        <div id="imgTest" style="display:none;"></div>
-        
-       Video:
-        <input id="vidFileID" type="text"/>
-        <div id="vidTest" style="display:none;"></div>
-        <br>   <br>
-             <button id="post" type="button" onclick="tweet()">Share</button>
- 
-         </form>
+  
     
-    <h2 id ="title">Overwatch</h2>
+    <h2 id="title">Overwatch</h2>
 
     <div id="mytweets"></div>
-        
         
         
         
@@ -580,12 +960,21 @@ window.onclick = function(event) {
 
     
     }
+    #profilechg{
+          background-color: white;
+        width:625px;
+        padding:10px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
     form{
+        font-family:Verdana;
         background-color: white;
         width:625px;
         padding:10px;
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
+        font-size:20;
         /*z-index: -1;
         position: relative;*/
         
@@ -631,15 +1020,27 @@ window.onclick = function(event) {
     #post:hover{
     filter:brightness(0.5);
 }
-     #title{
+       #bruhbutton{
+         background-color: #FFA07A;
+          border: none;
+          color: white;
+          height:50px;
+          width:150px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 25px;
+        border-radius: 12px;
+    }
+    #bruhbutton:hover{
+    filter:brightness(0.5);
+}
+    #title{
         font-size:30;
         font-style:italic;
     }
     
 
 </style>
-
-    
-
     
 </html>
